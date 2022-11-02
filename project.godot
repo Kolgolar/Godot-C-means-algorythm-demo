@@ -8,9 +8,20 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "Cluster",
+"language": "GDScript",
+"path": "res://main/cluster.gd"
+} ]
+_global_script_class_icons={
+"Cluster": ""
+}
+
 [application]
 
 config/name="C-means"
+run/main_scene="res://main/main.tscn"
 config/icon="res://icon.png"
 
 [gui]

@@ -1,0 +1,113 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://main/board.gd" type="Script" id=1]
+[ext_resource path="res://main/point.tscn" type="PackedScene" id=2]
+[ext_resource path="res://main/clusterer.gd" type="Script" id=3]
+[ext_resource path="res://main/main.gd" type="Script" id=4]
+[ext_resource path="res://assets/main_theme.tres" type="Theme" id=5]
+[ext_resource path="res://main/slider_container.tscn" type="PackedScene" id=6]
+
+[node name="Main" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 5 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Clusterer" type="Node" parent="."]
+script = ExtResource( 3 )
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Panel" type="Panel" parent="HBoxContainer"]
+margin_right = 256.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = -20.0
+margin_bottom = -20.0
+custom_constants/separation = 25
+alignment = 1
+
+[node name="Start" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
+margin_top = 196.0
+margin_right = 216.0
+margin_bottom = 220.0
+text = "Кластеризировать"
+
+[node name="Clear" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
+margin_top = 245.0
+margin_right = 216.0
+margin_bottom = 269.0
+text = "Очистить"
+
+[node name="ClastersQ" parent="HBoxContainer/Panel/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 294.0
+margin_bottom = 364.0
+
+[node name="Label" parent="HBoxContainer/Panel/VBoxContainer/ClastersQ" index="0"]
+text = "Количество кластеров"
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+margin_left = 256.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Board" type="ColorRect" parent="HBoxContainer/Control"]
+self_modulate = Color( 0.690196, 0.690196, 0.690196, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = -20.0
+margin_bottom = -20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.941176, 0.941176, 0.941176, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+_point = ExtResource( 2 )
+
+[node name="Points" type="Control" parent="HBoxContainer/Control/Board"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Button" type="Button" parent="HBoxContainer/Control/Board"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/Start" to="." method="_on_Start_pressed"]
+[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/Clear" to="." method="_on_Clear_pressed"]
+[connection signal="point_created" from="HBoxContainer/Control/Board" to="." method="_on_Board_point_created"]
+[connection signal="pressed" from="HBoxContainer/Control/Board/Button" to="HBoxContainer/Control/Board" method="_on_Button_pressed"]
+
+[editable path="HBoxContainer/Panel/VBoxContainer/ClastersQ"]

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/main_theme.tres" type="Theme" id=1]
+[ext_resource path="res://main/slider_container.gd" type="Script" id=2]
+
+[node name="SliderContainer" type="VBoxContainer"]
+margin_top = 98.0
+margin_right = 216.0
+margin_bottom = 168.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 216.0
+margin_bottom = 18.0
+text = "[Заголовок]"
+align = 1
+
+[node name="HSlider" type="HSlider" parent="."]
+margin_top = 22.0
+margin_right = 216.0
+margin_bottom = 38.0
+
+[node name="SpinBox" type="SpinBox" parent="."]
+margin_left = 71.0
+margin_top = 42.0
+margin_right = 145.0
+margin_bottom = 70.0
+size_flags_horizontal = 4
+
+[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="value_changed" from="SpinBox" to="." method="_on_SpinBox_value_changed"]
