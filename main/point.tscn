@@ -60,5 +60,13 @@ margin_bottom = 18.0
 size_flags_horizontal = 3
 align = 2
 
+[node name="Label" type="Label" parent="."]
+margin_left = -15.0
+margin_top = 7.0
+margin_right = 15.0
+margin_bottom = 25.0
+grow_horizontal = 2
+align = 1
+
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

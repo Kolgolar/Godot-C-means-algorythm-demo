@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Cluster",
 "language": "GDScript",
 "path": "res://main/cluster.gd"
+}, {
+"base": "Control",
+"class": "Point",
+"language": "GDScript",
+"path": "res://main/point.gd"
 } ]
 _global_script_class_icons={
-"Cluster": ""
+"Cluster": "",
+"Point": ""
 }
 
 [application]

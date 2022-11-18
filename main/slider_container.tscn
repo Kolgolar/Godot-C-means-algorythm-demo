@@ -9,6 +9,8 @@ margin_right = 216.0
 margin_bottom = 168.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
+_min_value = 2
+_max_value = 10
 
 [node name="Label" type="Label" parent="."]
 margin_right = 216.0

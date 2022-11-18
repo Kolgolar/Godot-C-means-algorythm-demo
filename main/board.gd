@@ -26,6 +26,14 @@ func clear() -> void:
 	_points_q = 0
 
 
+func draw_point(pos : Vector2) -> Point:
+	var new_point = _point.instance()
+	_points_container.add_child(new_point)
+	new_point.rect_global_position = pos
+	return new_point
+
+
+
 func _on_Button_pressed() -> void:
 	var new_point = _point.instance()
 	_points_container.add_child(new_point)
