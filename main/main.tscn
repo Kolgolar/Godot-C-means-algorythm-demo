@@ -51,44 +51,97 @@ margin_bottom = -20.0
 custom_constants/separation = 25
 alignment = 1
 
-[node name="Start" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
-margin_top = 196.0
+[node name="IterationsQ" type="Label" parent="HBoxContainer/Panel/VBoxContainer"]
+margin_top = 44.0
 margin_right = 216.0
-margin_bottom = 220.0
+margin_bottom = 83.0
+text = "Количество итераций:
+"
+align = 1
+
+[node name="Space3" type="Control" parent="HBoxContainer/Panel/VBoxContainer"]
+visible = false
+margin_top = 64.0
+margin_right = 216.0
+margin_bottom = 74.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="PointsPerClick" parent="HBoxContainer/Panel/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 108.0
+margin_bottom = 178.0
+_min_value = 1
+_max_value = 100
+
+[node name="Label" parent="HBoxContainer/Panel/VBoxContainer/PointsPerClick" index="0"]
+text = "Число точек на клик"
+
+[node name="Space" type="Control" parent="HBoxContainer/Panel/VBoxContainer"]
+visible = false
+margin_top = 194.0
+margin_right = 216.0
+margin_bottom = 204.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="ClustersQ" parent="HBoxContainer/Panel/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 203.0
+margin_bottom = 273.0
+
+[node name="Label" parent="HBoxContainer/Panel/VBoxContainer/ClustersQ" index="0"]
+text = "Количество кластеров"
+
+[node name="Start" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
+margin_top = 298.0
+margin_right = 216.0
+margin_bottom = 322.0
 text = "Кластеризировать"
 
 [node name="Clear" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
-margin_top = 245.0
+margin_top = 347.0
 margin_right = 216.0
-margin_bottom = 269.0
+margin_bottom = 371.0
 text = "Очистить"
 
-[node name="ClastersQ" parent="HBoxContainer/Panel/VBoxContainer" instance=ExtResource( 6 )]
-margin_top = 294.0
-margin_bottom = 364.0
+[node name="Space2" type="Control" parent="HBoxContainer/Panel/VBoxContainer"]
+visible = false
+margin_top = 422.0
+margin_right = 216.0
+margin_bottom = 522.0
+rect_min_size = Vector2( 0, 100 )
 
-[node name="Label" parent="HBoxContainer/Panel/VBoxContainer/ClastersQ" index="0"]
-text = "Количество кластеров"
+[node name="PointsQ" parent="HBoxContainer/Panel/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 396.0
+margin_bottom = 466.0
+_max_value = 5000
+
+[node name="Label" parent="HBoxContainer/Panel/VBoxContainer/PointsQ" index="0"]
+text = "Количество случайных точек"
+
+[node name="Auto" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
+margin_top = 491.0
+margin_right = 216.0
+margin_bottom = 515.0
+text = "Распределить точки"
 
 [node name="Control" type="Control" parent="HBoxContainer"]
 margin_left = 256.0
 margin_right = 1024.0
 margin_bottom = 600.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 
 [node name="Board" type="ColorRect" parent="HBoxContainer/Control"]
-self_modulate = Color( 0.690196, 0.690196, 0.690196, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 20.0
 margin_top = 20.0
 margin_right = -20.0
 margin_bottom = -20.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.941176, 0.941176, 0.941176, 1 )
+color = Color( 0.690196, 0.690196, 0.690196, 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
@@ -99,15 +152,26 @@ _point = ExtResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Button" type="Button" parent="HBoxContainer/Control/Board"]
 self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 
+[connection signal="clusterization_complete" from="Clusterer" to="HBoxContainer/Control/Board" method="_on_Clusterer_clusterization_complete"]
+[connection signal="iteration_passed" from="Clusterer" to="." method="_on_Clusterer_iteration_passed"]
+[connection signal="iteration_passed" from="Clusterer" to="HBoxContainer/Control/Board" method="_on_Clusterer_iteration_passed"]
+[connection signal="value_changed" from="HBoxContainer/Panel/VBoxContainer/PointsPerClick/HSlider" to="HBoxContainer/Control/Board" method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/Start" to="." method="_on_Start_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/Clear" to="." method="_on_Clear_pressed"]
+[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/Auto" to="." method="_on_Auto_pressed"]
 [connection signal="point_created" from="HBoxContainer/Control/Board" to="." method="_on_Board_point_created"]
 [connection signal="pressed" from="HBoxContainer/Control/Board/Button" to="HBoxContainer/Control/Board" method="_on_Button_pressed"]
 
-[editable path="HBoxContainer/Panel/VBoxContainer/ClastersQ"]
+[editable path="HBoxContainer/Panel/VBoxContainer/PointsPerClick"]
+[editable path="HBoxContainer/Panel/VBoxContainer/ClustersQ"]
+[editable path="HBoxContainer/Panel/VBoxContainer/PointsQ"]

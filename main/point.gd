@@ -2,11 +2,31 @@ extends Control
 
 class_name Point
 
-var cluster_releations := {}
-# cluster_id : probability
+var colors = [
+	Color.red, 
+	Color.orange,
+	Color.yellow,
+	Color.green,
+	Color.aqua,
+	Color.blue,
+	Color.magenta,
+	Color.bisque,
+	Color.black,
+	Color.deeppink,
+]
+
+var cluster_releations := [] setget update_clusters_relations
 
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
+
+
+func update_clusters_relations(arr : Array) -> void:
+	var max_u := 0
+	for u_idx in arr.size():
+		if arr[u_idx] > arr[max_u]:
+			max_u = u_idx
+	$TextureRect.self_modulate = colors[max_u]
 
 
 func _on_mouse_exited() -> void:
@@ -14,4 +34,5 @@ func _on_mouse_exited() -> void:
 
 
 func _on_mouse_entered() -> void:
+	print("COCK")
 	$PanelContainer.show()

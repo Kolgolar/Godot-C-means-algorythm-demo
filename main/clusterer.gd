@@ -1,55 +1,63 @@
 extends Node
 
 const _FUZZY_PARAMETER := 1.5
-const _MAX_EXECUTION_CYCLES := 1000
-const _EPSILON := 0.001
+const _MAX_EXECUTION_CYCLES := 100
+const _EPSILON := 0.01
+
+signal clusterization_complete
+signal iteration_passed
+
+var _points : Array
+var _clusters_q : int
+var _min_max_coords : Array
+var _clusters_coords : Array
+var _previous_decision_value : float
+var _current_decision_value : float
+var _iter_num : int
+var _matrix_u : Array
+
+var _is_busy := false
 
 
 func _ready() -> void:
 	randomize()
 
 
-func distribute_over_matrix_u(points : Array, clusters_q : int, fuzzy_parameter : float = _FUZZY_PARAMETER) -> Dictionary:
-	var min_max_coords : Array = _get_min_max_corrds(points)
-	var clusters_coords : Array = _gen_rnd_clusters_centers(clusters_q, min_max_coords[0], min_max_coords[1])
-	var matrix_u : Array = _gen_u_matrix(points.size(), clusters_q)
-	# print(matrix_u)
-	
-	var previous_decision_value : float = 0
-	var current_decision_value : float = 1
-
-	var iter_num := 0
-	print("Points coords:")
-	# TODO: Move it to process
-	while iter_num < _MAX_EXECUTION_CYCLES and abs(previous_decision_value - current_decision_value) > _EPSILON:
-		iter_num += 1
-		print("Iteration #" + str(iter_num))
-		previous_decision_value = current_decision_value
-		clusters_coords = _calculate_new_clusters_coords(matrix_u, points, clusters_q)
-		# print(clusters_coords)
+func _process(delta: float) -> void:
+	if _is_busy:
+		_iter_num += 1
+		# print("Iteration #" + str(_iter_num))
+		_previous_decision_value = _current_decision_value
+		_clusters_coords = _calculate_new_clusters_coords(_matrix_u, _points, _clusters_q)
 		var point_idx = 0
-		# print("Clusters coords: " + str(clusters_coords))
-		for matrix_row in matrix_u:
+		for matrix_row in _matrix_u:
 			var cluster_idx = 0
 			for i in matrix_row.size():
-				var distance : float = points[point_idx].rect_global_position.distance_to(clusters_coords[cluster_idx])
-				# print(str(point_idx) + ": " + str(distance))
+				var distance : float = _points[point_idx].rect_global_position.distance_to(_clusters_coords[cluster_idx])
 				matrix_row[i] = _prepare_u(distance) # Changing "u"
 				cluster_idx += 1
-			# print(matrix_row)
-				
 			matrix_row = _normalize_u_matrix_row(matrix_row)
-			matrix_u[point_idx] = matrix_row
+			_matrix_u[point_idx] = matrix_row
 			point_idx += 1
+		_current_decision_value = _calculate_decision_function(_points, _clusters_coords, _matrix_u)
+		emit_signal("iteration_passed", [_matrix_u, _clusters_coords, _iter_num])
 		
-		current_decision_value = _calculate_decision_function(points, clusters_coords, matrix_u)
-		# print("Prev: " + str(previous_decision_value))
-		# print("Curr: " + str(current_decision_value))
-	print("Iterations quantity: " + str(iter_num))
-	return {"matrix_u" : matrix_u, "clusters_coords" : clusters_coords}
+		if _iter_num >= _MAX_EXECUTION_CYCLES or abs(_previous_decision_value - _current_decision_value) < _EPSILON:
+			emit_signal("clusterization_complete", [{"matrix_u" : _matrix_u, "clusters_coords" : _clusters_coords}])
+			_is_busy = false
 
 
-# Matrix row = массив принадлежности данной точки к каждому кластеру
+func distribute_over_matrix_u(points : Array, clusters_q : int, fuzzy_parameter : float = _FUZZY_PARAMETER) -> void:
+	_points = points
+	_clusters_q = clusters_q
+	_min_max_coords = _get_min_max_corrds(_points)
+	_clusters_coords = _gen_rnd_clusters_centers(clusters_q, _min_max_coords[0], _min_max_coords[1])
+	_matrix_u = _gen_u_matrix(_points.size(), clusters_q)
+	_previous_decision_value = 0
+	_current_decision_value = 1
+	_iter_num = 0
+	_is_busy = true
+
 
 func _calculate_decision_function(points : Array, clusters_coords : Array, matrix_u : Array) -> float:
 	var sum : float = 0
@@ -61,7 +69,6 @@ func _calculate_decision_function(points : Array, clusters_coords : Array, matri
 			sum += u * clusters_coords[cluster_idx].distance_to(points[point_idx].rect_global_position)
 			cluster_idx += 1
 		point_idx += 1
-	
 	return sum
 
 
@@ -109,9 +116,7 @@ func _gen_u_matrix(points_q : int, clusters_q : int):
 		matrix.append([])
 		for y in range(y_size):
 			matrix[x].append(rand_range(0, 1))
-		print("Before: " + str(matrix[x]))
 		matrix[x] = _normalize_u_matrix_row(matrix[x])
-		print("After: " + str(matrix[x]))
 	return matrix
 
 

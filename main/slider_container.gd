@@ -16,6 +16,10 @@ func _ready() -> void:
 		n.step = _step
 
 
+func get_value() -> int:
+	return _slider.value
+
+
 func set_max(value) -> void:
 	_slider.max_value = value
 	_spin_box.max_value = value
