@@ -143,9 +143,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0.690196, 0.690196, 0.690196, 1 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 _point = ExtResource( 2 )
 
 [node name="Points" type="Control" parent="HBoxContainer/Control/Board"]

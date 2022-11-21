@@ -12,7 +12,7 @@ func _ready() -> void:
 func _on_Start_pressed() -> void:
 	var points : Array = get_tree().get_nodes_in_group("points")
 	var clusters_q = $HBoxContainer/Panel/VBoxContainer/ClustersQ.get_value()
-	if points.size() > clusters_q:
+	if points.size() >= clusters_q:
 		var clasters_q : int = clusters_q
 		_clusterer.distribute_over_matrix_u(points, clasters_q)
 

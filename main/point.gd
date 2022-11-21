@@ -2,6 +2,10 @@ extends Control
 
 class_name Point
 
+export(PackedScene) var _row
+
+var clusters_releations_arr := []
+
 var colors = [
 	Color.red, 
 	Color.orange,
@@ -14,8 +18,11 @@ var colors = [
 	Color.black,
 	Color.deeppink,
 ]
-
 var cluster_releations := [] setget update_clusters_relations
+
+onready var _info = $CanvasLayer/Info
+onready var _row_container = $CanvasLayer/Info/RowContainer
+
 
 func _ready() -> void:
 	pass
@@ -29,10 +36,22 @@ func update_clusters_relations(arr : Array) -> void:
 	$TextureRect.self_modulate = colors[max_u]
 
 
+
+func set_info_panel(arr : Array) -> void:
+	for child in $CanvasLayer/Info/RowContainer.get_children():
+		child.queue_free()
+	for r in arr.size():
+		var new_row = _row.instance()
+		new_row.get_node("TextureRect").self_modulate = colors[r]
+		new_row.get_node("Value").text = str(arr[r])
+		new_row.visible = true
+		_row_container.add_child(new_row)
+
+
 func _on_mouse_exited() -> void:
-	$PanelContainer.hide()
+	_info.hide()
 
 
 func _on_mouse_entered() -> void:
-	print("COCK")
-	$PanelContainer.show()
+	_info.rect_global_position = rect_global_position
+	_info.show()

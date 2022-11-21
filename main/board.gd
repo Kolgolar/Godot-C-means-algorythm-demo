@@ -13,18 +13,15 @@ signal point_created
 
 
 func _ready() -> void:
-	# $Button.mouse_filter = MOUSE_FILTER_STOP
 	pass
 
-
-func clasterization_done() -> void:
-	$Button.mouse_filter = MOUSE_FILTER_PASS
 
 
 func clear() -> void:
 	var points = get_tree().get_nodes_in_group("points")
 	for p in points:
 		p.queue_free()
+		$Button.mouse_filter = Button.MOUSE_FILTER_STOP
 	# _points_q = 0
 
 
@@ -51,15 +48,14 @@ func _on_Clusterer_clusterization_complete(data : Array) -> void:
 	var dict : Dictionary = data[0]
 	var matrix_u = dict["matrix_u"]
 	var clusters_coords = dict["clusters_coords"]
+	var points = dict["points"]
 	
 	var point_idx := 0
-	for matrix_row in matrix_u:
-		var max_u := 0
-		for u_idx in matrix_row.size():
-			if matrix_row[u_idx] > matrix_row[max_u]:
-				max_u = u_idx
+	for p in points:
+		p.set_info_panel(matrix_u[point_idx])
 		# get_tree().get_nodes_in_group("points")[point_idx].get_node("Label").text = str(max_u)
 		point_idx += 1
+	$Button.mouse_filter = Button.MOUSE_FILTER_IGNORE
 	
 	
 	# var id := 0

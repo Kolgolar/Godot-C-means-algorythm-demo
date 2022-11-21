@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
 		emit_signal("iteration_passed", [_matrix_u, _clusters_coords, _iter_num])
 		
 		if _iter_num >= _MAX_EXECUTION_CYCLES or abs(_previous_decision_value - _current_decision_value) < _EPSILON:
-			emit_signal("clusterization_complete", [{"matrix_u" : _matrix_u, "clusters_coords" : _clusters_coords}])
+			emit_signal("clusterization_complete", [{"matrix_u" : _matrix_u, "clusters_coords" : _clusters_coords, "points" : _points}])
 			_is_busy = false
 
 
